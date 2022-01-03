@@ -107,7 +107,7 @@
         }
         function proceed(name) {
             let newDefense = parseInt("<%= stats[2] %>");
-            if(sideTracker == "true"){
+            if(sideTracker == "true" || sideTracker == true){
                 newDefense += -3;
             }
             window.location.replace(`/dungeon/3/${name}/100!<%= stats[1] + 4 %>!${newDefense}/false`);
