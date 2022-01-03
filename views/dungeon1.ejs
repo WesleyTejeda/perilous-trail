@@ -107,7 +107,7 @@
         }
         function proceed(name) {
             let newStrength = parseInt("<%= stats[1] %>") + 2;
-            if(sideTracker === "true"){
+            if(sideTracker == "true"){
                 newStrength += 3;
             }
             window.location.replace(`/dungeon/2/${name}/100!${newStrength}!<%= stats[2] %>/${sideTracker}`);
@@ -121,7 +121,7 @@
                 window.location.replace(`/dungeon/1/<%= player.speakName() %>/100!<%= stats[1] + 5 %>!<%= stats[2] + 1 %>/${sideTracker}`);
             })
         }
-        if(sideTracker === 'true') {
+        if(sideTracker == 'true') {
             mainSequence();
         }
     </script>
