@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/masterStyle.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+</head>
+<body class="bg2">
+    <div id="instance" class="row hidden">
+        <div class="col">
+            <div class="swordsman" style="width: 200px; height: 200px;">
+                <div id="enemyHP" class="mt-4" style="background: linear-gradient(90deg, rgba(255,0,0,1) 100%, rgba(255,255,255,1) 100%); font-size: large;"><%= enemy.speakName() %></div>
+            </div>
+            <div class="hero" style="width: 200px; height: 200px;">
+                <div id="playerHP" class="mt-4" style="background: linear-gradient(90deg, rgba(255,0,0,1) 100%, rgba(255,255,255,1) 100%); font-size: large;"><%= player.speakName() %></div>
+                <p class="text-white">Strength: <%= stats[1] %></p>
+                <p class="text-white">Defense: <%= stats[2] %></p>
+            </div>
+        </div>
+    </div>
+    <div id="idle" class="show center">
+        <div id="walk" class="heroWalk center" style="width: 200px; height: 200px;">
+            
+        </div>
+    </div>
+    <div class="container messageBoard">
+        <div class="card transparent">
+            <div class="card-header" style="background-color: red; color: white">
+                
+            </div>
+            <div id="textBox" class="card-body transparent text-white text-center">
+                <blockquote class="blockquote mb-0 row">
+                    <p id="message"><%= player.speakName() %> continues into the dungeon. Recovered from the last fight, you encounter a magic potion. Will <%= player.speakName() %> drink it or leave it??</p>
+                </blockquote>
+                <button id="choice1" class="btn btn-primary">No chance bucko!</button>
+                <button id="choice2" class="btn btn-success">Drink it! Free loot</button>
+            </div>
+        </div>
+    </div>
+    <div id="rounds" data-rounds="<%= parseInt(rounds) %>">
+        
+    </div>
+    <script>
+        let button1 = document.getElementById("choice1");
+        let button2 = document.getElementById("choice2");
+        let sideTracker = "<%= sideQuest %>" || false;
+        let instance = document.getElementById("instance");
+        let idle = document.getElementById("idle");
+        let damagePool = {enemy: 0, player: 0};
+
+        button1.addEventListener("click", () => {mainSequence()})
+        button2.addEventListener("click", () => {sideQuest();})
+        const startBattle = async (arr) => {
+            let roundsElem = document.getElementById("rounds");
+            let rounds = roundsElem.dataset.rounds;
+            if(rounds == 0) {
+                if("<%= victor %>".includes("YOU LOSE")){
+                    document.getElementById("textBox").innerHTML = "<p><%= victor %></p><button class='btn btn-danger'>Go train</button>";
+                    document.getElementById("textBox").addEventListener("click", () => {train()})
+                }
+                else {
+                    document.getElementById("textBox").innerHTML = "<p><%= victor %> You gain 4 Strength!</p><button class='btn btn-success' click='proceed(<%= player.speakName() %>)'>Proceed</button>";
+                    document.getElementById("textBox").addEventListener("click", () => {proceed("<%= player.speakName() %>")});
+                }
+            } else {
+                let message = arr.pop();
+                damagePool.player += parseInt(message.split("/")[0]);
+                damagePool.enemy +=  parseInt(message.split("/")[1]);
+                document.getElementById("textBox").innerHTML = "<%= player.speakName() %> total damage taken => <span style='color: red;'>" + damagePool.player + "</span> damage.<br> <%= enemy.speakName() %> total damage taken => <span style='color: red;'>" + damagePool.enemy + "</span> damage.";
+                document.getElementById("playerHP").style = "background: linear-gradient(90deg, rgba(255,0,0,1) "+ (100 - parseInt(damagePool.player)) +"%, rgba(255,255,255,1)  "+ (100 - parseInt(damagePool.player)) +"%); font-size: large;";
+                document.getElementById("enemyHP").style = "background: linear-gradient(90deg, rgba(255,0,0,1) "+ (100 - parseInt(damagePool.enemy)) +"%, rgba(255,255,255,1)  "+ (100 - parseInt(damagePool.enemy)) +"%); font-size: large;";
+                roundsElem.dataset.rounds = parseInt(rounds) - 1;
+                await asyncWait();
+                startBattle(arr);
+            }
+        }
+        const mainSequence = () => {
+            document.getElementById("textBox").innerHTML = `<h2>You encounter <span style='color: red'><%= enemy.speakName() %></span> guarding the path. It will not let you pass</h2><button id="startFightBtn" class="btn btn-danger">Fight</button>`;
+            let arr = ("<%= log %>").split(",");
+            document.getElementById("startFightBtn").addEventListener("click", () => {startBattle(arr)})
+            instance.className = "row show";
+            idle.className = "hidden center";
+        }
+        const sideQuest = () => {
+            sideTracker = true;
+            document.getElementById("textBox").innerHTML = "<p>After drinking the magic potion, you find a weary traveler who needs help, or so it appears. As you come closer you their image vanishes. The potion was tainted! You've come under a curse (Defense - 3)...</p><button id='sideQuest' class='btn btn-info'>Next</button>";
+            document.getElementById("sideQuest").addEventListener("click", () => {
+                mainSequence();
+            })
+        }
+        function asyncWait() {
+            return new Promise(resolve => {
+                setTimeout(() => {resolve(null)}, 2000);
+            })
+        }
+        function proceed(name) {
+            let newDefense = parseInt("<%= stats[2] %>");
+            if(sideTracker === "true"){
+                newDefense += -3;
+            }
+            window.location.replace(`/dungeon/3/${name}/100!<%= stats[1] + 4 %>!${newDefense}/false`);
+        }
+        function train() {
+            instance.className = "row hidden";
+            idle.className = "show center";
+            document.getElementById("walk").setAttribute("class", "center train")
+            document.getElementById("textBox").innerHTML = "<p>You walk into the hyperbolic time chamber inside the Planet Fitness of the dungeon. Convenient... You gain strength! (Power + 5, Defense + 1)</p><button id='redo' class='btn btn-info'>Go back and kick some [REDACTED]</button>";
+            document.getElementById("redo").addEventListener("click", () => {
+                window.location.replace(`/dungeon/2/<%= player.speakName() %>/100!<%= stats[1] + 5 %>!<%= stats[2] + 1 %>/${sideTracker}`);
+            })
+        }
+        if(sideTracker === 'true') {
+            mainSequence();
+        }
+    </script>
+</body>
+</html>

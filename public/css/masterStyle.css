@@ -1,0 +1,130 @@
+html {
+    display: block;
+    height: 100vh;
+}
+
+body {
+    display: block;
+    min-height: 100%;
+}
+
+.bg1{
+    background-image: url("/assets/bg01.jpg");
+    background-position: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.bg2{
+    background-image: url("/assets/bg02.jpg");
+    background-position: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.bg3{
+    background-image: url("/assets/bg03.jpg");
+    background-position: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.titleFont {
+    font-family: 'Waterfall', cursive;
+    color: white;
+    font-size: 100px;
+    text-shadow: 4px 4px black;
+}
+
+.description {
+    font-family: 'Oooh Baby', cursive;
+    color: white;
+    font-size: 30px;
+    text-shadow: 1px 1px red;
+}
+
+.start {
+    position: absolute;
+    height: 70vh;
+    bottom: 0;
+    left: 40vw;
+}
+
+.woodBg {
+    background-image: url("/assets/wood.jpg");
+    background-position: center;
+}
+
+.messageBoard {
+    background-image: url("/assets/text-box.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto;
+    position: absolute;
+    padding: 0px;
+    bottom: 15vh;
+    left: 5vw;
+}
+
+.skelly {
+    background-image: url("/assets/wraith.gif");
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: auto;
+}
+
+.abysmal {
+    background-image: url("/assets/abysmal_knight.gif");
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: auto;
+}
+
+.swordsman {
+    background-image: url("/assets/swordsman.gif");
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: auto;
+}
+
+.hero {
+    background-image: url("/assets/heroMage.gif");
+    background-size: 200px 200px;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: auto;
+}
+
+.heroWalk {
+    background-image: url("/assets/heroMageWalk.gif");
+    background-size: 200px 200px;
+    background-position: unset;
+    background-repeat: no-repeat;
+    margin: auto;
+}
+
+.train {
+    background-image: url("/assets/train.gif");
+    background-position: unset;
+    background-repeat: no-repeat;
+    margin: auto;
+}
+
+.center {
+    height: 100vh;
+    width: 100vw;
+    padding-top: 30vh;
+    vertical-align: sub;
+}
+
+.hidden {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
+.transparent {
+    background: none;
+}
